@@ -1,4 +1,4 @@
-ci-nested-sets
+CodeIgniter - Nested Sets Library
 ==============
 
-Nested Set Library for CodeIgniter
+Improved / Fixed Nested Set Library for CodeIgniter, originally created by Thunder / intel352
