@@ -668,14 +668,14 @@ class Nested_set {
 	 * @return array or unordered list
 	 */
 	public function getPath($node, $includeSelf=FALSE, $returnAsArray=FALSE) {
-		
+
 		if(empty($node)) return FALSE;
-		
+
 		$leftcol	=	   $this->left_column_name;
 		$rightcol   =	   $this->right_column_name;
 		$leftval	= (int) $node[$leftcol];
 		$rightval   = (int) $node[$rightcol];
-		
+
 		if($includeSelf)
 		{
 			$this->db->where($leftcol . ' <= ' . $leftval . ' AND ' . $rightcol . ' >= ' . $rightval);
@@ -684,11 +684,11 @@ class Nested_set {
 		{
 			$this->db->where($leftcol . ' < ' . $leftval . ' AND ' . $rightcol . ' > ' . $rightval);
 		}
-		
+
 		$this->db->order_by($leftcol);
 		$query = $this->db->get($this->table_name);
 
-		if($query->num_rows() > 0) 
+		if($query->num_rows() > 0)
 		{
 			if($returnAsArray)
 			{
@@ -699,9 +699,9 @@ class Nested_set {
 				return $this->buildCrumbs($query->result_array());
 			}
 		}
-		
+
 		return FALSE;
-	} 
+	}
 
 	function buildCrumbs($crumbData)
 	{
@@ -714,19 +714,19 @@ class Nested_set {
 			if($itemId['id'] > 1) $retVal .= '<span class="divider">></span>';
 
 			$retVal .= '<li>' . anchor(
-				'shop/category/' . $itemId['id'], 
+				'shop/category/' . $itemId['id'],
 				$itemId[$this->text_column_name],
 				array(
 					'name' => $itemId[$this->text_column_name])
 				);
-				
+
 			$retVal .= '</li>';
 		}
 
 		$retVal .= '</ul>';
 
 		return $retVal;
-	} 
+	}
 
 
 	// -------------------------------------------------------------------------
@@ -795,17 +795,17 @@ class Nested_set {
 	 * @return string Unordered HTML list of the tree
 	 */
 	public function getSubTree($node) {
-		
+
 		if(empty($node)) return FALSE;
-			
+
 		$tree_handle = $this->getTreePreorder($node);
-		
+
 		$menuData = array(
 			'items' => array(),
 			'parents' => array()
 		);
-		
-		foreach ($tree_handle['result_array'] as $menuItem) 
+
+		foreach ($tree_handle['result_array'] as $menuItem)
 		{
 			$menuData['items'][$menuItem['id']] = $menuItem;
 			$menuData['parents'][$menuItem['parent_id']][] = $menuItem['id'];
@@ -814,7 +814,7 @@ class Nested_set {
 		return $menuData;
 		// return $this->buildMenu($node['parent_id'], $menuData);
 	}
-	
+
 	function buildMenu($parentId, $menuData, $depth=0)
 	{
 		$retVal = '';
@@ -822,12 +822,12 @@ class Nested_set {
 		if (isset($menuData['parents'][$parentId]))
 		{
 			$retVal = '<ul>';
-	
+
 			foreach ($menuData['parents'][$parentId] as $itemId)
 			{
-			
+
 				$retVal .= '<li class="depth-' . $depth . '">' . anchor(
-					'shop/category/' . $menuData['items'][$itemId]['id'], 
+					'shop/category/' . $menuData['items'][$itemId]['id'],
 					$menuData['items'][$itemId][$this->text_column_name],
 					array(
 						'class' => 'id-' . $itemId['id']
@@ -838,12 +838,12 @@ class Nested_set {
 
 				$retVal .= '</li>';
 			}
-	
+
 			$retVal .= '</ul>';
 		}
 
 		return $retVal;
-	} 
+	}
 
 
 	/**
