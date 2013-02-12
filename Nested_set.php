@@ -4,6 +4,9 @@
  *
  * An implementation of Joe Celko's Nested Sets as a Code Igniter model.
  *
+ * Updated by olimortimer to fix and improve
+ * https://github.com/olimortimer/ci-nested-sets
+ *
  * Updated by intel352 for unlimited root trees, also added ability to define
  * primary key column and parent column. Use of parent column can help lighten
  * the load of having a strict nested set model. It takes more of a hybrid approach.
@@ -16,8 +19,8 @@
 
 /**
  * @package Nested_set
- * @author  Thunder <ravenvelvet@gmail.com>, intel352 <jon@phpsitesolutions.com>
- * @version 1.2
+ * @author  Thunder <ravenvelvet@gmail.com>, intel352 <jon@phpsitesolutions.com>, olimortimer <oli@olimortimer.com>
+ * @version 1.2.1
  * @copyright Copyright (c) 2007 Thunder; Copyright (c) 2008 intel352
  * @todo	Keep semi-persistent model of data retrieved, to reduce query access of the same data.
  * 			Need to convert this to a generic TREE class, supporting nested and adjacent, a la cakephp
@@ -29,6 +32,7 @@ class Nested_set {
 	private $right_column_name;
 	private $primary_key_column_name;
 	private $parent_column_name;
+	private $text_column_name;
 	private $db;
 
 	/**
@@ -63,12 +67,13 @@ class Nested_set {
 	 * @param string $primary_key_column_name The name of the primary identifier field
 	 * @param string $parent_column_name The name of the parent column field
 	 */
-	public function setControlParams($table_name, $left_column_name = 'lft', $right_column_name = 'rgt', $primary_key_column_name = 'id', $parent_column_name = 'parent_id') {
+	public function setControlParams($table_name, $left_column_name = 'lft', $right_column_name = 'rgt', $primary_key_column_name = 'id', $parent_column_name = 'parent_id', $text_column_name = 'name') {
 		$this->table_name = $table_name;
 		$this->left_column_name = $left_column_name;
 		$this->right_column_name = $right_column_name;
 		$this->primary_key_column_name = $primary_key_column_name;
 		$this->parent_column_name = $parent_column_name;
+		$this->text_column_name = $text_column_name;
 	}
 
 	/**
@@ -704,17 +709,15 @@ class Nested_set {
 
 		$retVal = '<ul id="breadcrumbs">';
 
-		// $retVal.= '<li><a href="http://localhost/2ndsea/index.php/shop/" name="shop">Index</a></li>';
-
 		foreach ($crumbData as $itemId)
 		{
 			if($itemId['id'] > 1) $retVal .= '<span class="divider">></span>';
 
 			$retVal .= '<li>' . anchor(
 				'shop/category/' . $itemId['id'], 
-				$itemId['short_desc'],
+				$itemId[$this->text_column_name],
 				array(
-					'name' => $itemId['name'])
+					'name' => $itemId[$this->text_column_name])
 				);
 				
 			$retVal .= '</li>';
@@ -825,9 +828,8 @@ class Nested_set {
 			
 				$retVal .= '<li class="depth-' . $depth . '">' . anchor(
 					'shop/category/' . $menuData['items'][$itemId]['id'], 
-					$menuData['items'][$itemId]['short_desc'],
+					$menuData['items'][$itemId][$this->text_column_name],
 					array(
-						// 'title' => $menuData['items'][$itemId]['short_desc']
 						'class' => 'id-' . $itemId['id']
 					)
 				);
