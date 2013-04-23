@@ -319,7 +319,7 @@ class Nested_set {
 		$resultNode[$this->left_column_name]	=	$resultNode[$this->right_column_name]	=	0;
 
 		if($orderArg) {
-			$this->db->orderby($orderArg);
+			$this->db->order_by($orderArg);
 		}
 		if($limit_start || $limit_offset) {
 			$this->db->limit($limit_offset, $limit_start);
