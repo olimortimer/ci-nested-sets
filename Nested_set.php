@@ -556,7 +556,7 @@ class Nested_set {
 		$this->db->where($leftcol . ' <', $leftval);
 		$this->db->where($rightcol . ' >', $rightval);
 
-		return $this->db->count_all($this->table_name);
+		return $this->db->count_all_results($this->table_name);
 	}
 
 	/**
