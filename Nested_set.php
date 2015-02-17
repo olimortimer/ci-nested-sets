@@ -607,7 +607,7 @@ class Nested_set {
 	 * @param array $tree_handle Passed by reference to allow for modifications
 	 * @return array The next node in the tree
 	 */
-	public function getTreeNext($tree_handle) {
+	public function getTreeNext(&$tree_handle) {
 		$leftcol	=	$this->left_column_name;
 		$rightcol	=	$this->right_column_name;
 
@@ -807,8 +807,8 @@ class Nested_set {
 
 		foreach ($tree_handle['result_array'] as $menuItem)
 		{
-			$menuData['items'][$menuItem['id']] = $menuItem;
-			$menuData['parents'][$menuItem['parent_id']][] = $menuItem['id'];
+			$menuData['items'][$menuItem[$this->primary_key_column_name]] = $menuItem;
+			$menuData['parents'][$menuItem[$this->parent_column_name]][] = $menuItem[$this->primary_key_column_name];
 		}
 
 		return $menuData;
